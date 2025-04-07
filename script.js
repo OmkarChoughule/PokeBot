@@ -28,29 +28,15 @@ async function sendMessage() {
   isLoading = true;
 
   try {
-    const res = await fetch("http://localhost:7777/api/chat", {
+    const res = await fetch("http://localhost:5000/ask", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: text }),
+      body: JSON.stringify({ message: text }),
     });
 
-    if (!res.body) throw new Error("No response body");
+    const data = await res.json();
+    addMessage(data.reply, "bot");
 
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder();
-    let botText = "";
-
-    const botMsg = document.createElement("div");
-    botMsg.className = "chatbot-message bot";
-    chatContainer.appendChild(botMsg);
-
-    while (true) {
-      const { value, done } = await reader.read();
-      if (done) break;
-      botText += decoder.decode(value, { stream: true });
-      botMsg.textContent = botText;
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
   } catch (error) {
     console.error(error);
     addMessage("Something went wrong!", "bot");
@@ -58,3 +44,4 @@ async function sendMessage() {
     isLoading = false;
   }
 }
+

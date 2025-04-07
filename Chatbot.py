@@ -6,11 +6,9 @@ from rapidfuzz import process
 # Load spaCy NLP
 nlp = spacy.load("en_core_web_sm")
 
-# Load JSON data
 with open("pokemon_formatted_with_descriptions.json", "r") as f:
     pokedex = json.load(f)
 
-# Build name-to-data map
 pokemon_dict = {p["name"].lower(): p for p in pokedex}
 all_names = list(pokemon_dict.keys())
 
@@ -147,12 +145,13 @@ def handle_query(query):
 
 # ---------- CLI ----------
 
-print("🎮 Welcome to PokéBot! Ask me anything. Type 'exit' to leave.\n")
+if __name__ == "__main__":
+    print("🎮 Welcome to PokéBot! Ask me anything. Type 'exit' to leave.\n")
 
-while True:
-    user_input = input("You: ")
-    if user_input.strip().lower() in ["exit", "quit"]:
-        print("Bot: Smell ya later! 👋")
-        break
-    response = handle_query(user_input)
-    print(f"Bot: {response}\n")
+    while True:
+        user_input = input("You: ")
+        if user_input.strip().lower() in ["exit", "quit"]:
+            print("Bot: Smell ya later! 👋")
+            break
+        response = handle_query(user_input)
+        print(f"Bot: {response}\n")
