@@ -7,7 +7,7 @@ from rapidfuzz import process
 nlp = spacy.load("en_core_web_sm")
 
 # Load JSON data
-with open("pokemon_formatted.json", "r") as f:
+with open("pokemon_formatted_with_descriptions.json", "r") as f:
     pokedex = json.load(f)
 
 # Build name-to-data map
@@ -26,10 +26,20 @@ type_emojis = {
 
 def find_pokemon(name):
     name = name.lower()
+
+    # Step 1: Try exact match
     if name in pokemon_dict:
         return pokemon_dict[name]
-    match, score, _ = process.extractOne(name, all_names)
-    return pokemon_dict[match] if score > 75 else None
+
+    # Step 2: Try fuzzy match
+    best_match, score, _ = process.extractOne(name, all_names)
+    print(f"[DEBUG] Matched '{name}' to '{best_match}' with score {score}")
+    
+    if score > 90:  # Tighten threshold to avoid bad guesses
+        return pokemon_dict.get(best_match)
+
+    # Optional: Give user feedback if the match is weak
+    return None
 
 def extract_pokemon_names(text):
     doc = nlp(text)
@@ -48,31 +58,47 @@ def get_weaknesses(pokemon):
     return [t for t, val in pokemon["type_effectiveness"].items() if val > 1.0]
 
 def get_resistances(pokemon):
-    return [t for t, val in pokemon["type_effectiveness"].items() if val < 1.0]
+    return [t for t, val in pokemon["type_effectiveness"].items() if val < 1.0 and val != 0.0]
+
+def get_immunities(pokemon):
+    return [t for t, val in pokemon["type_effectiveness"].items() if val == 0.0]
 
 # ---------- Response Templates ----------
 
 def describe_pokemon(p):
     stats = p["base_stats"]
-    types = get_type_emoji(p["types"])
-    abilities = ", ".join(p["abilities"])
+    abilities = p.get("abilities", [])
+    ability_descs = p.get("abilityDescriptions", [])
+    types = get_type_emoji(p.get("types", []))
+
+    abilities_full = "\n".join(
+        f"- {name}: {desc}" for name, desc in zip(abilities, ability_descs)
+    )
+
     return f"""
 ✨ {p['name']} — {types}
+📖 {p['description']}
+
+🔢 Stats:
 HP: {stats['hp']}, Atk: {stats['attack']}, Def: {stats['defense']}
 Sp. Atk: {stats['sp_atk']}, Sp. Def: {stats['sp_def']}, Speed: {stats['speed']}
-Abilities: {abilities}
-Legendary: {'Yes' if p['meta']['is_legendary'] else 'No'}, Gen: {p['meta']['generation']}
+
+🧬 Abilities:
+{abilities_full}
+
+🌟 Legendary: {'Yes' if p['meta']['is_legendary'] else 'No'}, Gen: {p['meta']['generation']}
 """.strip()
 
 def compare_pokemon(p1, p2):
     stats = ["hp", "attack", "defense", "sp_atk", "sp_def", "speed"]
-    lines = [f"📊 Comparing {p1['name']} vs {p2['name']}"]
+    result = [f"📊 Comparing {p1['name']} vs {p2['name']}"]
+
     for stat in stats:
-        a = p1["base_stats"][stat]
-        b = p2["base_stats"][stat]
-        winner = "Tie" if a == b else p1["name"] if a > b else p2["name"]
-        lines.append(f"{stat.upper()}: {a} vs {b} → {winner}")
-    return "\n".join(lines)
+        val1, val2 = p1["base_stats"][stat], p2["base_stats"][stat]
+        better = "Tie" if val1 == val2 else p1["name"] if val1 > val2 else p2["name"]
+        result.append(f"{stat.upper()}: {val1} vs {val2} → {better}")
+
+    return "\n".join(result)
 
 # ---------- Bot Core ----------
 
@@ -84,29 +110,38 @@ def handle_query(query):
 
     names = extract_pokemon_names(query)
 
-    if any(w in query for w in ["compare", "vs", "versus", "better", "stronger"]) and len(names) >= 2:
+    if any(w in query for w in ["compare", "vs", "versus", "better", "stronger", "and"]) and len(names) >= 2:
         p1, p2 = find_pokemon(names[0]), find_pokemon(names[1])
         if p1 and p2:
             return compare_pokemon(p1, p2)
         else:
             return "One of those Pokémon names wasn't recognized."
 
-    if any(w in query for w in ["weak", "resist", "resistance"]):
+    if any(w in query for w in ["weak","weakness", "resist", "resistance", "immune", "immunity", "immunities", "battle"]):
         if names:
             poke = find_pokemon(names[0])
             if poke:
                 weak = get_weaknesses(poke)
                 resist = get_resistances(poke)
+                immune = get_immunities(poke)
                 return (
                     f"{poke['name']} is weak to: {', '.join(weak) or 'None'}\n"
-                    f"And resistant to: {', '.join(resist) or 'None'}"
+                    f"And resistant to: {', '.join(resist) or 'None'}\n"
+                    f"And immune to: {', '.join(immune) or 'None'}"
                 )
         return "I couldn't find that Pokémon."
+    if any(w in query for w in ["tell","me","about","what","give","info","information"]):
+        if names:
+            poke = find_pokemon(names[0])
+            if poke:
+                return describe_pokemon(poke)
 
+        return "Hmm... I didn’t catch that. Try asking about a Pokémon or type 'random'!"
+    
     if names:
-        poke = find_pokemon(names[0])
-        if poke:
-            return describe_pokemon(poke)
+            poke = find_pokemon(names[0])
+            if poke:
+                return describe_pokemon(poke)
 
     return "Hmm... I didn’t catch that. Try asking about a Pokémon or type 'random'!"
 
