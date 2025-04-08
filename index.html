@@ -6,14 +6,83 @@
   <meta name="description" content="Pokémon-themed chatbot built with HTML, CSS, and JavaScript." />
   <meta name="author" content="Your Name" />
   <title>Pokémon Chatbot</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="chatbot.css" />
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f2f2f2;
+      color: #333;
+    }
+
+    .intro-section {
+      text-align: center;
+      padding: 80px 20px;
+      background: linear-gradient(135deg, #14557a, #3b4cca);
+      color: #fff;
+    }
+
+    .intro-section h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .intro-section p {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    .highlight {
+      font-weight: 600;
+      color: #ffcb05;
+    }
+
+    .get-started-btn {
+      margin-top: 2rem;
+      padding: 0.8rem 1.6rem;
+      background: #ffcb05;
+      color: #2a75bb;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .get-started-btn:hover {
+      background: #fff;
+      color: #3b4cca;
+      transform: translateY(-2px);
+    }
+  </style>
 </head>
 <body>
   <!-- Intro Section -->
   <section class="intro-section">
     <h1>Welcome to the Pokémon Chatbot!</h1>
-    <p>Ask anything about your favorite Pokémon!</p>
-    <div class="scroll-hint">↓ Scroll down to chat</div>
+    <p>
+      Meet your very own Poké-assistant 🤖! Whether you want to 
+      <span class="highlight">learn about a Pokémon</span>, 
+      <span class="highlight">compare two favorites</span>, or 
+      <span class="highlight">discover type weaknesses</span> — just ask away!
+      Get ready to explore the Pokédex like never before!
+    </p>
+    <a href="#chat-container">
+      <button class="get-started-btn">Get Started ↓</button>
+    </a>
   </section>
 
   <!-- Chatbot Section -->

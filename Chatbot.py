@@ -21,7 +21,6 @@ type_emojis = {
 }
 
 # ---------- Utilities ----------
-
 def find_pokemon(name):
     name = name.lower()
 
@@ -102,7 +101,6 @@ def compare_pokemon(p1, p2):
 
 def handle_query(query):
     query = query.lower()
-
     if "random" in query or "surprise" in query:
         return describe_pokemon(random.choice(list(pokemon_dict.values())))
 
@@ -136,10 +134,10 @@ def handle_query(query):
 
         return "Hmm... I didn’t catch that. Try asking about a Pokémon or type 'random'!"
     
-    if names:
-            poke = find_pokemon(names[0])
-            if poke:
-                return describe_pokemon(poke)
+    # if names:
+    #         poke = find_pokemon(names[0])
+    #         if poke:
+    #             return describe_pokemon(poke)
 
     return "Hmm... I didn’t catch that. Try asking about a Pokémon or type 'random'!"
 

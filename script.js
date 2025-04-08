@@ -28,7 +28,7 @@ async function sendMessage() {
   isLoading = true;
 
   try {
-    const res = await fetch("http://localhost:5000/ask", {
+    const res = await fetch("http://localhost:5500/ask", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: text }),
@@ -44,4 +44,3 @@ async function sendMessage() {
     isLoading = false;
   }
 }
-
