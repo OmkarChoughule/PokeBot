@@ -92,8 +92,12 @@ def describe_pokemon(p):
 📖 {p['description']}
 
 🔢 Stats:
-HP: {stats['hp']}, Atk: {stats['attack']}, Def: {stats['defense']}
-Sp. Atk: {stats['sp_atk']}, Sp. Def: {stats['sp_def']}, Speed: {stats['speed']}
+HP: {stats['hp']}
+Atk: {stats['attack']}
+Def: {stats['defense']}
+Sp. Atk: {stats['sp_atk']}
+Sp. Def: {stats['sp_def']}
+Speed: {stats['speed']}
 
 🧬 Abilities:
 {abilities_full}
