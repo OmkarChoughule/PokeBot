@@ -4,3 +4,5 @@
 .idea/vcs.xml
 .idea/inspectionProfiles/profiles_settings.xml
 .idea/inspectionProfiles/Project_Default.xml
+pokemon_formatted.json
+pokemon_formatted_with_descriptions.json
