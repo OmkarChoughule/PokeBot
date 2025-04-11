@@ -13,7 +13,7 @@
 
 ### ⚡ Features
 
-> Ask questions, compare stats, or discover surprises — this chatbot knows over 1000 Pokémon!
+> Ask questions, compare stats, or discover surprises — this chatbot knows over 800 Pokémon upto Sun and Moon!
 
 🧠 Natural language support using spaCy  
 ⚡ Fuzzy matching with RapidFuzz (e.g., "peekachu" still finds Pikachu)  
