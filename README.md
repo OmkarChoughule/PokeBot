@@ -42,6 +42,7 @@ Frontend: Simple JS captures input, renders messages
 → Info on Lucario
 
 📸 Screenshots 
+
 Introduction Page:
 ![Chatbot UI](./assets/Chatbot_UI.png)
 Prompt:
