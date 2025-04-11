@@ -50,7 +50,7 @@ Prompt:
 
 ✨ Credits PokeAPI Sprites spaCy NLP RapidFuzz Pokémon type emojis
 
-📬 Contact Made with ❤️ by @yourusername
+📬 Contact Made with ❤️ by @OmkarChoughule and @M-Durga-Prasath
 
 ---
 
