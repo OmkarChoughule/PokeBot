@@ -14,7 +14,7 @@ input.addEventListener("keydown", function (e) {
 function addMessage(text, sender) {
   const message = document.createElement("div");
   message.className = `chatbot-message ${sender}`;
-  message.textContent = text;
+  message.innerHTML = text;
   chatContainer.appendChild(message);
   chatContainer.scrollTop = chatContainer.scrollHeight;
 }

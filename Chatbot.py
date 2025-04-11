@@ -6,7 +6,7 @@ from rapidfuzz import process
 # Load spaCy NLP
 nlp = spacy.load("en_core_web_sm")
 
-with open("pokemon_formatted_with_descriptions.json", "r") as f:
+with open("pokemon_data_with_images.json", "r") as f:
     pokedex = json.load(f)
 
 pokemon_dict = {p["name"].lower(): p for p in pokedex}
@@ -38,7 +38,17 @@ def find_pokemon(name):
     # Optional: Give user feedback if the match is weak
     return None
 
-def extract_pokemon_names(text):
+def extract_pokemon_names(text,id=0):
+    if id ==1:
+        doc = nlp(text)
+        candidates = [token.text.lower() for token in doc if token.is_alpha]
+        found = []
+        for word in candidates:
+            match, score, _ = process.extractOne(word, all_names)
+            if score > 90:
+                found.append(match)
+        return list(set(found)) 
+
     doc = nlp(text)
     candidates = [token.text.lower() for token in doc if token.is_alpha]
     found = []
@@ -67,12 +77,17 @@ def describe_pokemon(p):
     abilities = p.get("abilities", [])
     ability_descs = p.get("abilityDescriptions", [])
     types = get_type_emoji(p.get("types", []))
+    image_url = p.get("image", "Image not available")
+    shiny_url = p.get("shiny", "Shiny not available")
 
     abilities_full = "\n".join(
         f"- {name}: {desc}" for name, desc in zip(abilities, ability_descs)
     )
 
     return f"""
+🖼️ Normal: <img src="{image_url}" alt="{p['name']}" width="150">
+<br>
+🌟 Shiny: <img src="{shiny_url}" alt="{p['name']} Shiny" width="150">
 ✨ {p['name']} — {types}
 📖 {p['description']}
 
@@ -85,6 +100,7 @@ Sp. Atk: {stats['sp_atk']}, Sp. Def: {stats['sp_def']}, Speed: {stats['speed']}
 
 🌟 Legendary: {'Yes' if p['meta']['is_legendary'] else 'No'}, Gen: {p['meta']['generation']}
 """.strip()
+
 
 def compare_pokemon(p1, p2):
     stats = ["hp", "attack", "defense", "sp_atk", "sp_def", "speed"]
@@ -127,6 +143,7 @@ def handle_query(query):
                 )
         return "I couldn't find that Pokémon."
     if any(w in query for w in ["tell","me","about","what","give","info","information"]):
+        names = extract_pokemon_names(query,1)
         if names:
             poke = find_pokemon(names[0])
             if poke:
