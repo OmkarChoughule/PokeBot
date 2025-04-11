@@ -25,13 +25,31 @@
 
 ---
 
-### 💻 Demo
+2️⃣ Frontend Open index.html in your browser. Edit chat.js if you change ports.
 
-<div align="center">
-  <img src="https://media.tenor.com/f77lmzB5FgkAAAAC/pokeball.gif" width="100" />
-</div>
+🧠 How It Works spaCy: Extracts entities and Pokémon names from user queries
 
-> Coming soon: Hosted demo! 🎉
+RapidFuzz: Fuzzy matches typos or similar names
+
+Flask: Hosts the chatbot logic via a single /ask endpoint
+
+Frontend: Simple JS captures input, renders messages
+
+🎮 Example Queries vbnet Copy Edit → Tell me about Bulbasaur
+→ Compare Charizard and Blastoise
+→ What is Gengar weak to?
+→ Show me a random Pokémon
+→ Info on Lucario
+
+📸 Screenshots 
+Introduction Page:
+![Chatbot UI](./assets/Chatbot_UI.png)
+Prompt:
+![Chatbot UI](./assets/Chatbot_prompt.png)
+
+✨ Credits PokeAPI Sprites spaCy NLP RapidFuzz Pokémon type emojis
+
+📬 Contact Made with ❤️ by @yourusername
 
 ---
 
